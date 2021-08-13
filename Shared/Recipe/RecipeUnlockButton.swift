@@ -48,8 +48,7 @@ struct RecipeUnlockButton: View {
             
             Spacer()
             
-            if case let .available(price, _) = product.availability {
-                let displayPrice = price.formatted(.currency(code: "USD").presentation(.narrow))
+            if case let .available(displayPrice) = product.availability {
                 Button(action: purchaseAction) {
                     Text(displayPrice)
                 }
@@ -73,16 +72,16 @@ extension RecipeUnlockButton {
     }
     
     enum Availability {
-        case available(price: Decimal, locale: Locale)
+        case available(displayPrice: String)
         case unavailable
     }
 }
 
 extension RecipeUnlockButton.Product {
-    init(for product: SKProduct) {
-        title = LocalizedStringKey(product.localizedTitle)
-        description = LocalizedStringKey(product.localizedDescription)
-        availability = .available(price: product.price as Decimal, locale: product.priceLocale)
+    init(for product: StoreKit.Product) {
+        title = LocalizedStringKey(product.displayName)
+        description = LocalizedStringKey(product.description)
+        availability = .available(displayPrice: product.displayPrice)
     }
 }
 
@@ -91,7 +90,7 @@ struct RecipeUnlockButton_Previews: PreviewProvider {
     static let availableProduct = RecipeUnlockButton.Product(
         title: "Unlock All Recipes",
         description: "Make smoothies at home!",
-        availability: .available(price: 4.99, locale: .current)
+        availability: .available(displayPrice: "$4.99")
     )
     
     static let unavailableProduct = RecipeUnlockButton.Product(

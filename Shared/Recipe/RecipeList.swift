@@ -20,21 +20,23 @@ struct RecipeList: View {
     var body: some View {
         List {
             #if os(iOS)
-            Section {
-                unlockButton
-                    .listRowInsets(EdgeInsets())
-                    .listRowBackground(EmptyView())
-                    .listSectionSeparator(.hidden)
-                    .listRowSeparator(.hidden)
+            if !model.allRecipesUnlocked {
+                Section {
+                    unlockButton
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(EmptyView())
+                        .listSectionSeparator(.hidden)
+                        .listRowSeparator(.hidden)
+                }
+                .listSectionSeparator(.hidden)
             }
-            .listSectionSeparator(.hidden)
             #endif
-            
             ForEach(smoothies) { smoothie in
                 NavigationLink(tag: smoothie.id, selection: $selection) {
                     RecipeView(smoothie: smoothie)
                 } label: {
                     SmoothieRow(smoothie: smoothie)
+                        .padding(.vertical, 5)
                 }
             }
         }
@@ -42,11 +44,13 @@ struct RecipeList: View {
         .listStyle(.insetGrouped)
         #elseif os(macOS)
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            unlockButton
-                .padding(8)
+            if !model.allRecipesUnlocked {
+                unlockButton
+                    .padding(8)
+            }
         }
         #endif
-        .navigationTitle(Text("Recipes", comment: "Title of the 'recipes' app section showing the list of smoothie recipes"))
+        .navigationTitle(Text("Recipes", comment: "Title of the 'recipes' app section showing the list of smoothie recipes."))
         .animation(.spring(response: 1, dampingFraction: 1), value: model.allRecipesUnlocked)
         .accessibilityRotor("Favorite Smoothies", entries: smoothies.filter { model.isFavorite(smoothie: $0) }, entryLabel: \.title)
         .accessibilityRotor("Smoothies", entries: smoothies, entryLabel: \.title)
@@ -60,15 +64,20 @@ struct RecipeList: View {
     @ViewBuilder
     var unlockButton: some View {
         Group {
-            if !model.allRecipesUnlocked {
-                if let product = model.unlockAllRecipesProduct {
-                    RecipeUnlockButton(product: .init(for: product), purchaseAction: { model.purchaseProduct(product) })
-                } else {
-                    RecipeUnlockButton(
-                        product: .init(title: "Unlock All Recipes", description: "Loading…", availability: .unavailable),
-                        purchaseAction: {}
-                    )
-                }
+            if let product = model.unlockAllRecipesProduct {
+                RecipeUnlockButton(
+                    product: RecipeUnlockButton.Product(for: product),
+                    purchaseAction: { model.purchase(product: product) }
+                )
+            } else {
+                RecipeUnlockButton(
+                    product: RecipeUnlockButton.Product(
+                        title: "Unlock All Recipes",
+                        description: "Loading…",
+                        availability: .unavailable
+                    ),
+                    purchaseAction: {}
+                )
             }
         }
         .transition(.scale.combined(with: .opacity))

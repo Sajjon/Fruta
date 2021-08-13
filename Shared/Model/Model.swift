@@ -9,10 +9,7 @@ import Foundation
 import AuthenticationServices
 import StoreKit
 
-typealias FetchCompletionHandler = (([SKProduct]) -> Void)
-typealias PurchaseCompletionHandler = ((SKPaymentTransaction?) -> Void)
-
-class Model: NSObject, ObservableObject {
+class Model: ObservableObject {
     @Published var order: Order?
     @Published var account: Account?
     
@@ -31,7 +28,7 @@ class Model: NSObject, ObservableObject {
     
     @Published var isApplePayEnabled = true
     @Published var allRecipesUnlocked = false
-    @Published var unlockAllRecipesProduct: SKProduct?
+    @Published var unlockAllRecipesProduct: Product?
     
     let defaults = UserDefaults(suiteName: "group.example.fruta")
     
@@ -41,21 +38,17 @@ class Model: NSObject, ObservableObject {
     }
     
     private let allProductIdentifiers = Set([Model.unlockAllRecipesIdentifier])
+    private var fetchedProducts: [Product] = []
+    private var updatesHandler: Task<Void, Error>? = nil
     
-    private var completedPurchases = [String]()
-    private var fetchedProducts = [SKProduct]()
-    private var productsRequest: SKProductsRequest?
-    private var fetchCompletionHandler: FetchCompletionHandler?
-    private var purchaseCompletionHandler: PurchaseCompletionHandler?
-    
-    override init() {
-        super.init()
-        // Get notified when access to a product is revoked
-        startObservingPaymentQueue()
-        fetchProducts { [weak self] products in
-            guard let self = self else { return }
-            self.unlockAllRecipesProduct = products.first(where: { $0.productIdentifier == Model.unlockAllRecipesIdentifier })
+    init() {
+        // Start listening for transaction info updates, like if the user
+        // refunds the purchase or if a parent approves a child's request to
+        // buy.
+        updatesHandler = Task {
+            await listenForStoreUpdates()
         }
+        fetchProducts()
         
         guard let user = userCredential else { return }
         let provider = ASAuthorizationAppleIDProvider()
@@ -66,6 +59,10 @@ class Model: NSObject, ObservableObject {
                 }
             }
         }
+    }
+    
+    deinit {
+        updatesHandler?.cancel()
     }
     
     func authorizeUser(_ result: Result<ASAuthorization, Error>) {
@@ -141,126 +138,76 @@ extension Model {
 extension Model {
     static let unlockAllRecipesIdentifier = "com.example.apple-samplecode.fruta.unlock-recipes"
     
-    func product(for identifier: String) -> SKProduct? {
-        return fetchedProducts.first(where: { $0.productIdentifier == identifier })
+    func product(for identifier: String) -> Product? {
+        return fetchedProducts.first(where: { $0.id == identifier })
     }
     
-    func purchaseProduct(_ product: SKProduct) {
-        startObservingPaymentQueue()
-        buy(product) { [weak self] transaction in
-            guard let self = self,
-                  let transaction = transaction else {
-                return
-            }
-            
-            // If the purchase was successful and it was for the premium recipes identifiers
-            // then publish the unlock change
-            if transaction.payment.productIdentifier == Model.unlockAllRecipesIdentifier,
-               transaction.transactionState == .purchased {
+    func purchase(product: Product) {
+        Task { @MainActor in
+            do {
+                let result = try await product.purchase()
+                guard case .success(.verified(let transaction)) = result,
+                      transaction.productID == Model.unlockAllRecipesIdentifier else {
+                    return
+                }
                 self.allRecipesUnlocked = true
+            } catch {
+                print("Failed to purchase \(product.id): \(error)")
             }
         }
     }
+    
 }
 
 // MARK: - Private Logic
 
 extension Model {
-    private func buy(_ product: SKProduct, completion: @escaping PurchaseCompletionHandler) {
-        // Save our completion handler for later
-        purchaseCompletionHandler = completion
-        
-        // Create the payment and add it to the queue
-        let payment = SKPayment(product: product)
-        SKPaymentQueue.default().add(payment)
+    
+    private func fetchProducts() {
+        Task { @MainActor in
+            self.fetchedProducts = try await Product.products(for: allProductIdentifiers)
+            self.unlockAllRecipesProduct = self.fetchedProducts
+                .first { $0.id == Model.unlockAllRecipesIdentifier }
+            // Check if the user owns all recipes at app launch.
+            await self.updateAllRecipesOwned()
+        }
     }
     
-    private func hasPurchasedIAP(_ identifier: String) -> Bool {
-        completedPurchases.contains(identifier)
-    }
-    
-    private func fetchProducts(_ completion: @escaping FetchCompletionHandler) {
-        guard self.productsRequest == nil else {
+    @MainActor
+    private func updateAllRecipesOwned() async {
+        guard let product = self.unlockAllRecipesProduct else {
+            self.allRecipesUnlocked = false
             return
         }
-        // Store our completion handler for later
-        fetchCompletionHandler = completion
-        
-        // Create and start this product request
-        productsRequest = SKProductsRequest(productIdentifiers: allProductIdentifiers)
-        productsRequest?.delegate = self
-        productsRequest?.start()
-    }
-    
-    private func startObservingPaymentQueue() {
-        SKPaymentQueue.default().add(self)
-    }
-}
-
-// MARK: - SKPAymentTransactionObserver
-
-extension Model: SKPaymentTransactionObserver {
-    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
-        for transaction in transactions {
-            var shouldFinishTransaction = false
-            switch transaction.transactionState {
-            case .purchased, .restored:
-                completedPurchases.append(transaction.payment.productIdentifier)
-                shouldFinishTransaction = true
-            case .failed:
-                shouldFinishTransaction = true
-            case .purchasing, .deferred:
-                break
-            @unknown default:
-                break
-            }
-            if shouldFinishTransaction {
-                SKPaymentQueue.default().finishTransaction(transaction)
-                DispatchQueue.main.async {
-                    self.purchaseCompletionHandler?(transaction)
-                    self.purchaseCompletionHandler = nil
-                }
-            }
+        guard let entitlement = await product.currentEntitlement,
+              case .verified(_) = entitlement else {
+                  self.allRecipesUnlocked = false
+                  return
         }
+        self.allRecipesUnlocked = true
     }
     
-    func paymentQueue(_ queue: SKPaymentQueue, didRevokeEntitlementsForProductIdentifiers productIdentifiers: [String]) {
-        completedPurchases.removeAll(where: { productIdentifiers.contains($0) })
-        DispatchQueue.main.async {
-            if productIdentifiers.contains(Model.unlockAllRecipesIdentifier) {
+    /// - Important: This method never returns, it will only suspend.
+    @MainActor
+    private func listenForStoreUpdates() async {
+        for await update in Transaction.updates {
+            guard case .verified(let transaction) = update else {
+                print("Unverified transaction update: \(update)")
+                continue
+            }
+            guard transaction.productID == Model.unlockAllRecipesIdentifier else {
+                continue
+            }
+            // If this transaction was revoked, make sure the user no longer
+            // has access to it.
+            if transaction.revocationReason != nil {
+                print("Revoking access to \(transaction.productID)")
                 self.allRecipesUnlocked = false
+            } else {
+                self.allRecipesUnlocked = true
+                await transaction.finish()
             }
         }
     }
-}
-
-// MARK: - SKProductsRequestDelegate
-
-extension Model: SKProductsRequestDelegate {
-    func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
-        let loadedProducts = response.products
-        let invalidProducts = response.invalidProductIdentifiers
-        
-        guard !loadedProducts.isEmpty else {
-            var errorMessage = "Could not find any products."
-            if !invalidProducts.isEmpty {
-                errorMessage = "Invalid products: \(invalidProducts.joined(separator: ", "))"
-            }
-            print("\(errorMessage)")
-            productsRequest = nil
-            return
-        }
-        
-        // Cache these for later use
-        fetchedProducts = loadedProducts
     
-        // Notify anyone waiting on the product load
-        DispatchQueue.main.async {
-            self.fetchCompletionHandler?(loadedProducts)
-            
-            // Clean up
-            self.fetchCompletionHandler = nil
-            self.productsRequest = nil
-        }
-    }
 }
