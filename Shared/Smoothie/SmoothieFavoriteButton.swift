@@ -10,11 +10,9 @@ import SwiftUI
 struct SmoothieFavoriteButton: View {
     @EnvironmentObject private var model: Model
     
-    var smoothie: Smoothie?
-    
     var isFavorite: Bool {
-        guard let smoothie = smoothie else { return false }
-        return model.favoriteSmoothieIDs.contains(smoothie.id)
+        guard let smoothieID = model.selectedSmoothieID else { return false }
+        return model.favoriteSmoothieIDs.contains(smoothieID)
     }
     
     var body: some View {
@@ -34,17 +32,18 @@ struct SmoothieFavoriteButton: View {
 
             }
         }
+        .disabled(model.selectedSmoothieID == nil)
     }
     
     func toggleFavorite() {
-        guard let smoothie = smoothie else { return }
-        model.toggleFavorite(smoothie: smoothie)
+        guard let smoothieID = model.selectedSmoothieID else { return }
+        model.toggleFavorite(smoothieID: smoothieID)
     }
 }
 
 struct SmoothieFavoriteButton_Previews: PreviewProvider {
     static var previews: some View {
-        SmoothieFavoriteButton(smoothie: .berryBlue)
+        SmoothieFavoriteButton()
             .padding()
             .previewLayout(.sizeThatFits)
             .environmentObject(Model())

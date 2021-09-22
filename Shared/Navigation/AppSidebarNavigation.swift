@@ -57,7 +57,8 @@ struct AppSidebarNavigation: View {
                 .background()
                 .ignoresSafeArea()
                 .toolbar {
-                    SmoothieFavoriteButton(smoothie: nil)
+                    SmoothieFavoriteButton()
+                        .environmentObject(model)
                         .disabled(true)
                 }
         }

@@ -98,11 +98,11 @@ extension Model {
         order?.isReady = true
     }
     
-    func toggleFavorite(smoothie: Smoothie) {
-        if favoriteSmoothieIDs.contains(smoothie.id) {
-            favoriteSmoothieIDs.remove(smoothie.id)
+    func toggleFavorite(smoothieID: Smoothie.ID) {
+        if favoriteSmoothieIDs.contains(smoothieID) {
+            favoriteSmoothieIDs.remove(smoothieID)
         } else {
-            favoriteSmoothieIDs.insert(smoothie.id)
+            favoriteSmoothieIDs.insert(smoothieID)
         }
     }
     

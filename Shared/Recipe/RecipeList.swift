@@ -8,7 +8,6 @@ A list of unlocked smoothies' recipes, and a call to action to purchase all reci
 import SwiftUI
 
 struct RecipeList: View {
-    @State private var selection: Smoothie.ID?
     @EnvironmentObject private var model: Model
     
     var smoothies: [Smoothie] {
@@ -32,8 +31,9 @@ struct RecipeList: View {
             }
             #endif
             ForEach(smoothies) { smoothie in
-                NavigationLink(tag: smoothie.id, selection: $selection) {
+                NavigationLink(tag: smoothie.id, selection: $model.selectedSmoothieID) {
                     RecipeView(smoothie: smoothie)
+                        .environmentObject(model)
                 } label: {
                     SmoothieRow(smoothie: smoothie)
                         .padding(.vertical, 5)

@@ -18,6 +18,7 @@ struct FrutaApp: App {
         }
         .commands {
             SidebarCommands()
+            SmoothieCommands(model: model)
         }
     }
 }

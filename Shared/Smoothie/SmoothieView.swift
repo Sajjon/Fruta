@@ -35,7 +35,8 @@ struct SmoothieView: View {
             .background()
             .navigationTitle(smoothie.title)
             .toolbar {
-                SmoothieFavoriteButton(smoothie: smoothie)
+                SmoothieFavoriteButton()
+                    .environmentObject(model)
             }
             .sheet(isPresented: $presentingOrderPlacedSheet) {
                 OrderPlacedView()

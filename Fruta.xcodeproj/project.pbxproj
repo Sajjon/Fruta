@@ -277,6 +277,11 @@
 		61C3378526559001001AAC1D /* PurchaseButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C3378226559001001AAC1D /* PurchaseButtonStyle.swift */; };
 		61C3378626559001001AAC1D /* PurchaseButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C3378226559001001AAC1D /* PurchaseButtonStyle.swift */; };
 		61C3378726559001001AAC1D /* PurchaseButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C3378226559001001AAC1D /* PurchaseButtonStyle.swift */; };
+		69734292265EC1390005A14C /* SmoothieCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69734291265EC1390005A14C /* SmoothieCommands.swift */; };
+		69734293265EC1390005A14C /* SmoothieCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69734291265EC1390005A14C /* SmoothieCommands.swift */; };
+		69734294265EC1390005A14C /* SmoothieCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69734291265EC1390005A14C /* SmoothieCommands.swift */; };
+		69734295265EC1390005A14C /* SmoothieCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69734291265EC1390005A14C /* SmoothieCommands.swift */; };
+		69734296265EC1390005A14C /* SmoothieCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69734291265EC1390005A14C /* SmoothieCommands.swift */; };
 		A31FA5B526323F9400FC46C1 /* NutritionalItems.json in Resources */ = {isa = PBXBuildFile; fileRef = A31FA5B326323F9400FC46C1 /* NutritionalItems.json */; };
 		A31FA5B626323F9400FC46C1 /* NutritionalItems.json in Resources */ = {isa = PBXBuildFile; fileRef = A31FA5B326323F9400FC46C1 /* NutritionalItems.json */; };
 		A31FA5B826323F9400FC46C1 /* NutritionalItems.json in Resources */ = {isa = PBXBuildFile; fileRef = A31FA5B326323F9400FC46C1 /* NutritionalItems.json */; };
@@ -454,6 +459,7 @@
 		6182BAF026522B14006774BD /* CapsuleButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButtonStyle.swift; sourceTree = "<group>"; };
 		61A8CB8926166F2A002845E4 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		61C3378226559001001AAC1D /* PurchaseButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseButtonStyle.swift; sourceTree = "<group>"; };
+		69734291265EC1390005A14C /* SmoothieCommands.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmoothieCommands.swift; sourceTree = "<group>"; };
 		7FC1AA3A24832F0200A6CF1F /* iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOS.entitlements; sourceTree = "<group>"; };
 		A31FA5B326323F9400FC46C1 /* NutritionalItems.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = NutritionalItems.json; sourceTree = "<group>"; };
 		A3C268F4262FE0030093B9DF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -715,6 +721,7 @@
 				6111A1F626157D870046AAA9 /* SmoothieMenu.swift */,
 				6111A1EE26157D870046AAA9 /* SmoothieRow.swift */,
 				6111A1EF26157D870046AAA9 /* SmoothieView.swift */,
+				69734291265EC1390005A14C /* SmoothieCommands.swift */,
 			);
 			path = Smoothie;
 			sourceTree = "<group>";
@@ -984,6 +991,7 @@
 				610F54E026158DDB001D3AA0 /* Animations.swift in Sources */,
 				610F54E126158DDB001D3AA0 /* RewardsCard.swift in Sources */,
 				610F54E226158DDB001D3AA0 /* RedeemSmoothieButton.swift in Sources */,
+				69734292265EC1390005A14C /* SmoothieCommands.swift in Sources */,
 				610F54E326158DDB001D3AA0 /* CircleToggleStyle.swift in Sources */,
 				610F54E526158DDB001D3AA0 /* SmoothieMenu.swift in Sources */,
 				610F54E626158DDB001D3AA0 /* NutritionRow.swift in Sources */,
@@ -1033,6 +1041,7 @@
 				610F551C26158DE2001D3AA0 /* StepperView.swift in Sources */,
 				610F551D26158DE2001D3AA0 /* NutritionFact+Decodable.swift in Sources */,
 				610F551E26158DE2001D3AA0 /* Order.swift in Sources */,
+				69734294265EC1390005A14C /* SmoothieCommands.swift in Sources */,
 				6182BAF326522B14006774BD /* CapsuleButtonStyle.swift in Sources */,
 				610F551F26158DE2001D3AA0 /* MeasurementView.swift in Sources */,
 				610F552026158DE2001D3AA0 /* Smoothie+SwiftUI.swift in Sources */,
@@ -1099,6 +1108,7 @@
 				610F557726158F9A001D3AA0 /* Ingredient+SwiftUI.swift in Sources */,
 				610F558E26158FB9001D3AA0 /* OrderPlacedView.swift in Sources */,
 				610F55A126158FC5001D3AA0 /* CircleToggleStyle.swift in Sources */,
+				69734295265EC1390005A14C /* SmoothieCommands.swift in Sources */,
 				610F559A26158FC2001D3AA0 /* SmoothieRow.swift in Sources */,
 				610F557026158F97001D3AA0 /* BubbleBackground.swift in Sources */,
 				610F557226158F97001D3AA0 /* StepperView.swift in Sources */,
@@ -1154,6 +1164,7 @@
 				610F55CD261593C3001D3AA0 /* ContentView.swift in Sources */,
 				610F55DB261593D3001D3AA0 /* RewardsCard.swift in Sources */,
 				610F55D6261593D1001D3AA0 /* Nutritions.swift in Sources */,
+				69734296265EC1390005A14C /* SmoothieCommands.swift in Sources */,
 				610F55D0261593C7001D3AA0 /* NutritionFact+Decodable.swift in Sources */,
 				610F55C5261593BC001D3AA0 /* Ingredient.swift in Sources */,
 				610F55CA261593C1001D3AA0 /* Order.swift in Sources */,
@@ -1218,6 +1229,7 @@
 				612F3DA02615A32700137D77 /* AnimatableFontModifier.swift in Sources */,
 				612F3DB82615A33E00137D77 /* DisplayableMeasurement.swift in Sources */,
 				612F3DBF2615A34400137D77 /* RecipeList.swift in Sources */,
+				69734293265EC1390005A14C /* SmoothieCommands.swift in Sources */,
 				612F3DD02615A35200137D77 /* AppTabNavigation.swift in Sources */,
 				612F3D9C2615A32700137D77 /* FlipView.swift in Sources */,
 				612F3DCC2615A34A00137D77 /* SquishableButtonStyle.swift in Sources */,
@@ -1438,8 +1450,15 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "iOS/iOS Extended.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "iOS/Info-Extended.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Fruta;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1467,8 +1486,15 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "iOS/iOS Extended.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "iOS/Info-Extended.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Fruta;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1557,6 +1583,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "iOS/Info-Widget.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Fruta;
 				INFOPLIST_KEY_CFBundleExecutable = "Fruta iOS Widgets";
 				INFOPLIST_KEY_CFBundleVersion = 1;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1588,6 +1615,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "iOS/Info-Widget.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Fruta;
 				INFOPLIST_KEY_CFBundleExecutable = "Fruta iOS Widgets";
 				INFOPLIST_KEY_CFBundleVersion = 1;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1691,6 +1719,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "iOS/Info-Clip.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Fruta;
 				INFOPLIST_KEY_CFBundleExecutable = "$(EXECUTABLE_NAME)";
 				INFOPLIST_KEY_CFBundleVersion = 1;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1730,6 +1759,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "iOS/Info-Clip.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Fruta;
 				INFOPLIST_KEY_CFBundleExecutable = "$(EXECUTABLE_NAME)";
 				INFOPLIST_KEY_CFBundleVersion = 1;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

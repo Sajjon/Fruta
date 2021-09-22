@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RecipeView: View {
     var smoothie: Smoothie
+    @EnvironmentObject private var model: Model
     
     @State private var smoothieCount = 1
     
@@ -76,7 +77,7 @@ struct RecipeView: View {
         .background { backgroundColor.ignoresSafeArea() }
         .navigationTitle(smoothie.title)
         .toolbar {
-            SmoothieFavoriteButton(smoothie: smoothie)
+            SmoothieFavoriteButton().environmentObject(model)
         }
     }
 }

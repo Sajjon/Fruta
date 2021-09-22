@@ -9,8 +9,7 @@ import SwiftUI
 
 struct SmoothieList: View {
     var smoothies: [Smoothie]
-    
-    @State private var selection: Smoothie.ID?
+
     @EnvironmentObject private var model: Model
     
     var listedSmoothies: [Smoothie] {
@@ -23,7 +22,7 @@ struct SmoothieList: View {
         ScrollViewReader { proxy in
             List {
                 ForEach(listedSmoothies) { smoothie in
-                    NavigationLink(tag: smoothie.id, selection: $selection) {
+                    NavigationLink(tag: smoothie.id, selection: $model.selectedSmoothieID) {
                         SmoothieView(smoothie: smoothie)
                     } label: {
                         SmoothieRow(smoothie: smoothie)
@@ -32,12 +31,12 @@ struct SmoothieList: View {
                         // Need to make sure the Smoothie exists.
                         guard let smoothieID = newValue, let smoothie = Smoothie(for: smoothieID) else { return }
                         proxy.scrollTo(smoothie.id)
-                        selection = smoothie.id
+                        model.selectedSmoothieID = smoothie.id
                     }
                     .swipeActions {
                         Button {
                             withAnimation {
-                                model.toggleFavorite(smoothie: smoothie)
+                                model.toggleFavorite(smoothieID: smoothie.id)
                             }
                         } label: {
                             Label {

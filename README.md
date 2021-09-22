@@ -17,7 +17,7 @@ The Fruta sample app leverages [Sign in with Apple](https://developer.apple.com/
 
 ## Configure the Sample Code Project
 
-This project requires Xcode 13 or later. To build this project, keep the following in mind:
+To build this project for iOS 15, use Xcode 13. The runtime requirement is iOS 15. To build this project for macOS 12 Monterey beta 7, use Xcode 13 beta 5. To configure this project, follow these steps:
 
 1. To run on your devices, including on macOS, set your team in the targets’ Signing & Capabilities panes. Xcode manages the provisioning profiles for you.
 2. To run on an iOS or iPadOS device, open the `iOSClip.entitlements` file and update the value of the [Parent Application Identifiers Entitlement](https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_parent-application-identifiers) to match the iOS app's bundle identifier.
@@ -40,6 +40,7 @@ struct FrutaApp: App {
         }
         .commands {
             SidebarCommands()
+            SmoothieCommands(model: model)
         }
     }
 }

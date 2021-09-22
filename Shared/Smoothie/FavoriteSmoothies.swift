@@ -27,6 +27,7 @@ struct FavoriteSmoothies: View {
                 }
             }
             .navigationTitle(Text("Favorites", comment: "Title of the 'favorites' app section showing the list of favorite smoothies"))
+            .environmentObject(model)
     }
 }
 
